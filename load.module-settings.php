@@ -55,13 +55,15 @@ if(!$_SET["set-module"]){
 			/* Load Module Lang */
 			if( is_file(MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".cms.php") ){
 				include_once MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".cms.php";				
-				//@$_LANG = array_replace_recursive($_LANG,$MOD_LANG);  // Use in PHP 5.3
+				if( !isset($_LANG_CMS) || !is_array($_LANG) ){ $_LANG = array(); }
+				//@$_LANG = array_replace_recursive($_LANG,$MOD_LANG);  // Use in PHP 5.3				
 				@$_LANG = array_merge($_LANG,$MOD_LANG);				
 			}
 			if( is_file(MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".php") ){
-				include_once MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".php";							
+				include_once MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".php";
+				if( !isset($_LANG_CMS) || !is_array($_LANG_CMS) ){ $_LANG_CMS = array(); }				
 				//@$_LANG_CMS = array_replace_recursive($_LANG_CMS,$CMS_LANG);  // Use in PHP 5.3
-				@$_LANG_CMS = array_merge($_LANG_CMS,$CMS_LANG);				
+				@$_LANG_CMS = array_merge($_LANG_CMS,$CMS_LANG);		
 				unset($CMS_LANG);
 			}						
 			//print_r($MOD_SET);

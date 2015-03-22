@@ -23,7 +23,7 @@ include_once CORE."/load.lang-cms.php";
 include_once CORE."/load.module-settings.php";
 //print_r($_CMSSET);
 //print_r($MOD_SET);
-if( @$MOD_SET["mod-req-login"] ){ $_SS->st("_cms_mod-req-login", true); }
+if( isset($MOD_SET["mod-req-login"]) ){ $_SS->st("_cms_mod-req-login", $MOD_SET["mod-req-login"] ); }else{ $_SS->st("_cms_mod-req-login", false);}
 if($_CMSSET["req-login"] || @$MOD_SET["mod-req-login"]){
 	
 	include_once CORE."/core.login-eval.php";
