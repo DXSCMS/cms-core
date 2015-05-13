@@ -57,13 +57,15 @@ if(!$_SET["set-module"]){
 				include_once MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".cms.php";				
 				if( !isset($_LANG_CMS) || !is_array($_LANG) ){ $_LANG = array(); }
 				//@$_LANG = array_replace_recursive($_LANG,$MOD_LANG);  // Use in PHP 5.3				
-				@$_LANG = array_merge($_LANG,$MOD_LANG);				
+				@$_LANG = array_merge($_LANG,$MOD_LANG);
+				if(isset($MOD_LANG)) $_CMSLanguage->loadMOD($MOD_LANG);
 			}
 			if( is_file(MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".php") ){
 				include_once MODULESROL."/".$_module."/lang/".$_CMSSET["lang"].".php";
 				if( !isset($_LANG_CMS) || !is_array($_LANG_CMS) ){ $_LANG_CMS = array(); }				
 				//@$_LANG_CMS = array_replace_recursive($_LANG_CMS,$CMS_LANG);  // Use in PHP 5.3
-				@$_LANG_CMS = array_merge($_LANG_CMS,$CMS_LANG);		
+				@$_LANG_CMS = array_merge($_LANG_CMS,$CMS_LANG);
+				if(isset($CMS_LANG)) $_CMSLanguage->loadCMS($CMS_LANG);
 				unset($CMS_LANG);
 			}						
 			//print_r($MOD_SET);
@@ -74,8 +76,8 @@ if(!$_SET["set-module"]){
 		if( $_CMSSET['def-mod'] ){
 			$_SET['set-module'] = true;
 			$_SET['cms-module'] = $_CMSSET['def_mod'];
-			if( $_SS->gt("_cms_logged") ){
-				$redirect = $_URLCMS->gtLink( $_CMSSET["def-module"] , false , false );	//echo '$redirect:'.$redirect ;
+			if( $_CMSSession->get("_cms_logged") ){
+				$redirect = $_CMSURL->to()->Module( $_CMSSET["def-module"] ).'';	//echo '$redirect:'.$redirect ;
 				header("Location: $redirect");
 				exit(0);
 			}
@@ -109,5 +111,13 @@ if(!$_SET["set-module"]){
 	}
 }
 
+if( !$_SET['set-page'] ){
+	if(isset($_REQUEST[$_CMSSET['page-handler']]) && $_REQUEST[$_CMSSET['page-handler']] !=""){		
+		$_SET['cms-page'] = $_REQUEST[$_CMSSET['page-handler']]; // Fix For Redirect after Login (to Current)		
+		$_SET['mod-page'] = $_SET['cms-page'];
+	}
+}else{
+	$_SET['mod-page'] = $_SET['cms-page'];
+}
 
 ?>

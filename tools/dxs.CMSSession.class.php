@@ -43,8 +43,7 @@ class CMSSession{
 		$this->sess[$var] = $val;
 		return $this;
 	}
-	function clear($var){ unset($this->sess[$var]);	return $this; }
-	function forget($var){ unset($this->sess[$var]); return $this; }
+	function forget($var=false){ if($var){ unset($this->sess[$var]);}else{ $this->sess = array(); } return $this; }
 	function has($var){	return isset($this->sess[$var]); }
 	function is_set($var){ return isset($this->sess[$var]); }
 	function is_empty($var){ return empty($this->sess[$var]); }	

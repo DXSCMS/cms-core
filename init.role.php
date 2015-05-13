@@ -11,23 +11,26 @@ included for: init.cms.php
 include_once CORE."/init.session.php";
 include_once CORE."/load.settings.php";
 
-$_SS->st("_cms_req-login",$_CMSSET["req-login"]);
-if( !$_CMSSET["req-login"] ){ $_SS->st("_cms_logged",true); }
+if(isset($_REQUEST[ $_CMSSET["logout-handler"] ])){	include CORE."/core.logout.php";exit(0);}
 
-if(isset($_REQUEST[ $_CMSSET["logout-handler"] ])){
-	include CORE."/core.logout.php";
-	exit(0);
-}
+$_CMSSession->set('_cms_req-login',$_CMSSET['req-login']);
+if( !$_CMSSET["req-login"] ){ $_CMSSession->set("_cms_logged",true); }
 
 include_once CORE."/load.lang-cms.php";
 include_once CORE."/load.module-settings.php";
+//include_once CORE."/load.module.php";
+
 //print_r($_CMSSET);
 //print_r($MOD_SET);
-if( isset($MOD_SET["mod-req-login"]) ){ $_SS->st("_cms_mod-req-login", $MOD_SET["mod-req-login"] ); }else{ $_SS->st("_cms_mod-req-login", false);}
-if($_CMSSET["req-login"] || @$MOD_SET["mod-req-login"]){
-	
+if( isset($MOD_SET["mod-req-login"]) ){ 	
+	$_CMSSession->set('_cms_mod-req-login',$MOD_SET['mod-req-login']);
+}else{ 
+	$_CMSSession->set('_cms_mod-req-login',false);
+}
+
+if($_CMSSET["req-login"] || @$MOD_SET["mod-req-login"]){	
 	include_once CORE."/core.login-eval.php";
-	include CORE."/core.login.php";
+	include_once CORE."/core.login.php";
 }
 
 ?>

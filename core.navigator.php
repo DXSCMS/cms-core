@@ -38,13 +38,13 @@ while ($folder = readdir($dir)){
 		 $_shwmod = $MOD_SET["mod-tab-mode"];
 		 if(($_shwmod == "on" && $_login) || ($_shwmod == "off" && !$_login) || ($_shwmod == "both") ){
 			 
-			 unset($MOD_LANG); // *
-			 unset($CMS_LANG);
+			unset($MOD_LANG); // *
+			unset($CMS_LANG);
 			 
-			 @include( MODULESROL."/".$folder."/lang/".$_CMSSET["lang"].".cms.php"); // * only for compatibility
-			 @include( MODULESROL."/".$folder."/lang/".$_CMSSET["lang"].".php");
+			@include( MODULESROL."/".$folder."/lang/".$_CMSSET["lang"].".cms.php"); // * only for compatibility
+			@include( MODULESROL."/".$folder."/lang/".$_CMSSET["lang"].".php");
 			//echo '_'; print_r($CMS_LANG); echo '_';
-			$_LANG_CMS["module"] = $CMS_LANG["module"];
+			@$_LANG_CMS["module"] = $CMS_LANG["module"];
 			
 			//*
 			if(isset($MOD_LANG["mod-title"])){ 

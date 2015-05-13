@@ -13,18 +13,12 @@ if($_SET["set-module"]){
 	$_shwmod = $_SET["mod-show-mode"];
 	 if( ($_shwmod == "on" && $_login) || ($_shwmod == "off" && !$_login) || ($_shwmod == "both") ){ // module on
 	 
-		if(is_dir(MODULESROL."/".$_module )){ // exist module folder
-		//if(is_file(MODULESROL."/".$_module ."/data/module.preh.php")){				
-			$_SET["module"] = $_module;
-			//echo 'module-preheader found...';				
-			if(!$_SET['set-page']){
-			//echo 'page not is setted...';
-				if(isset($_REQUEST[$_CMSSET['page-handler']])){
-						
-					$_page = $_REQUEST[ $_CMSSET['page-handler'] ];
-					
-					 if(is_file(MODULESROL."/".$_module."/".$_page.".body.php")){ // exists page file							
-						//echo 'page found...';
+		if(is_dir(MODULESROL."/".$_module )){ // exist module folder		
+			$_SET["module"] = $_module;	//echo 'module-preheader found...';				
+			if(!$_SET['set-page']){	//echo 'page not is setted...';
+				if(isset($_REQUEST[$_CMSSET['page-handler']])){						
+					$_page = $_REQUEST[ $_CMSSET['page-handler'] ];					
+					 if(is_file(MODULESROL."/".$_module."/".$_page.".body.php")){ // exists page file													
 						$_SET["mod-page"] = $_page;
 
 						$_SET["set-page"] = true;
@@ -47,8 +41,7 @@ if($_SET["set-module"]){
 						$_SET["cms-page"] = 'index';
 						
 						$_SET["error-page"] = null;
-					 }else{ // not exists index
-						
+					 }else{ // not exists index						
 						$_SET["mod-page"] = null;
 						
 						$_SET["set-page"] = false;
@@ -56,29 +49,26 @@ if($_SET["set-module"]){
 						
 						$_SET["error-page"] = "404";
 					}
-				}
-				
-				
-				
+				}											
 			}else{
 				//echo 'page is setted...';
 				$_page = $_SET["cms-page"];
 				if(is_file(MODULESROL."/".$_module."/".$_page.".body.php")){ //exist page file
+					$_SET["mod-page"] = $_page;
 				}else
-				if(is_file(MODULESROL."/".$_module."/index.body.php")){ // exist index					
+				if(is_file(MODULESROL."/".$_module."/index.body.php")){ // exist index										
+					$_SET["mod-page"] = 'index';
 					
 					$_SET["set-page"] = true;
 					$_SET["cms-page"] = 'index';
 				}else{
 					$_SET["mod-page"] = null;
 					$_SET["set-page"] = false;
-				}
-			
+				}			
 			}
 			
 		}else{
-			//echo 'module-preheader not found...';
-			
+			//echo 'module-preheader not found...';			
 			$_SET["module"] = null;
 			$_SET["set-module"] = false;
 		}		
@@ -88,10 +78,9 @@ if($_SET["set-module"]){
 	 }else if( !isset($_SET["mod-show-mode"]) ){
 		
 	 }else{
-		header("Location: ".$_SET["self"]);
+		header("Location: ".$_CMSURL->to().'');
 	 }
 }
-
 //echo '$_SET["cms-module"]:'.$_SET["cms-module"].'...';
 //echo '$_SET["cms-page"]:'.$_SET["cms-page"].'...';
 ?>

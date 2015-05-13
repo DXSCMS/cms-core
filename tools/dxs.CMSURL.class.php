@@ -24,17 +24,12 @@ class CMSURL{
 	protected $_getCMS;
 
 	protected $_qry = null;// Array()
+		
+	function __construct(){$this->init();}
+	public function __toString(){return $this->makeURL();}	
+	public function str(){return $this->makeURL();}
 	
-	
-	function __construct(){				
-		$this->init();
-	}
-	public function __toString(){
-		return $this->makeURL();
-	}
-	
-	private function init(){
-	
+	private function init(){	
 		global $_CMSSET; //print_r($_CMSSET);
 		global $_SET; //print_r($_SET);
 		
@@ -64,23 +59,16 @@ class CMSURL{
 	}
 	private function makeURL(){
 		$queryStr = Array();
-		$url = '';
-		if( $this->_use_root ){ $url = $this->_root; }
-		$url .= "?";
-		$_query_arr = $this->_query_arr;
-		
-		if($this->_setModule){
-			$queryStr[] = $this->_moduleHandler .'='. $this->_module;
-		}
-		if($this->_setPage){ 
-			$queryStr[] = $this->_pageHandler .'='. $this->_page;
-		}
+		$url = ''; $url = $this->_root;
+		if( $this->_use_root ){ $url = $this->_root; }		
+		$_query_arr = $this->_query_arr;		
+		if($this->_setModule){ $queryStr[] = $this->_moduleHandler .'='. $this->_module; }
+		if($this->_setPage){ $queryStr[] = $this->_pageHandler .'='. $this->_page; }
 		//print_r($_qry);
-
 		if( $this->_setQuery ) if( count($_query_arr)>0 ) foreach( $_query_arr as $key => $val ){
 			$queryStr[] = ($val!=null) ? ($key.'='.$val) : ($key);
 		}
-		$url .= implode('&',$queryStr);
+		if(count($queryStr)>0){	$url .= "?".implode('&',$queryStr); }
 		return $url;
 	}
 	public function Root($use = true){
@@ -91,16 +79,17 @@ class CMSURL{
 	public function Module($module = true){ return $this->setModule($module); }
 	public function setModule($module = true){		
 		if( is_bool($module) ){ // true/false
-			if($module){
+			$this->_setModule = false;
+			if($module && isset($this->_moduleCMS) ){
 				$this->_setModule = true;
 				$this->_module = $this->_moduleCMS;
-			}else{
-				$this->_setModule = false;
 			}
 		}else
 		if( $module === null ){ // true
-			$this->_setModule = true;
-			$this->_module = $this->_moduleCMS;			
+			if( isset($this->_moduleCMS) ){
+				$this->_setModule = true;
+				$this->_module = $this->_moduleCMS;
+			}			
 		}else{ 
 			$this->_setModule = true;
 			$this->_module = $module;
@@ -111,34 +100,38 @@ class CMSURL{
 	public function setPage($page = true){
 		//if(!$this->_setModule){ $this->_setModule = true;$this->_module = $this->_moduleCMS; }
 		if( is_bool($page) ){
-			if($page){
+			$this->_setPage = false;
+			if($page && isset($this->_pageCMS) ){
 				$this->_setPage = true;
 				$this->_page = $this->_pageCMS;
-			}else{
-				$this->_setPage = false;
 			}
 		}else
 		if( $page == null){ 
-			$this->_setPage = true;
-			$this->_page = $this->_pageCMS;
+			if( isset($this->_pageCMS) ){
+				$this->_setPage = true;
+				$this->_page = $this->_pageCMS;
+			}
 		}else{
 			$this->_setPage = true;
 			$this->_page = $page;
 		}
 		return $this;
 	}
+	public function MPage($page = true){ return $this->Module()->Page($page); }
 	public function noQuery($key = false){ 
 		if($key){ return $this->Query()->removeQuery($key); }
 		$this->_query_arr = array();
 		return $this;
 		//return $this->setQuery($key); 
 	}
-	public function onlyQuery($key = false){ 
-		if($key){ 
-			$value = $this->_query_arr[$key];
+	public function onlyQuery($keys = false){ 
+		if($keys){ 
+			$keys_arr = explode(',',$keys);
+			$only = array();
+			foreach($keys_arr as $key){ $only[$key] = $this->_query_arr[$key];	}
 			$this->_query_arr = array();
-			$this->_query_arr[$key] = $value;
-		}		
+			foreach($only as $key => $val){ $this->addQuery($key,$val);	}
+		}
 		return $this;		
 	}
 	public function Query($query = true){ return $this->setQuery($query); }
