@@ -32,7 +32,7 @@ class CMSSession{
 	//
 	function all(){
 		return $this->sess;
-	}
+	}	
 	function get($var,$uns = false){global $_CMSSET;
 		@$ret = isset($this->sess[$var])?$this->sess[$var]:null;
 		if($uns){ unset($this->sess[$var]); }		
@@ -49,6 +49,10 @@ class CMSSession{
 	function is_empty($var){ return empty($this->sess[$var]); }	
 	function up($var,$n = 1){ $this->sess[$var] = $this->sess[$var]+$n; }
 	function down($var,$n = 1){ $this->sess[$var] = $this->sess[$var]-$n; }
+	function pop($var){ return $this->get($var,true); }
+	function pull($var){ return $this->get($var,true); }
+	function put($var,$val){ return $this->set($var,$val); }
+	function flush(){ return $this->forget(); }
 }
 
 ?>
