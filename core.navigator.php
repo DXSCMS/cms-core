@@ -11,26 +11,19 @@ function fixNavArrJson($arr){//fix stdClass (el json_decode lo lee asi)
 function fixNavOrderJson($mods){global $_CMSSET;
 	$linkuser = MODULESROL;
 	$filejmods = "$linkuser/order.json";
-	$jmods = json_decode(file_get_contents($filejmods),true);
-	//print_r($jmods);
-	$jmods = fixNavArrJson($jmods);
-	
+	if(!is_file($filejmods)) return $mods;
+	$jmods = json_decode(file_get_contents($filejmods),true);	
+	$jmods = fixNavArrJson($jmods);	
 	foreach($jmods as $jmod => $name){
 		if(isset($mods[$jmod])){$fmods[$jmod]=$mods[$jmod];}
-	}
-	//print_r($fmods);
-	/*
-	return $fmods;
-	*/
-	$rmods = array_merge($fmods,$mods); // return mods
-	//print_r($rmods);
+	}	
+	$rmods = array_merge($fmods,$mods); // return mods	
 	return $rmods;
 }
 
-
 $_login  = $_SESSION[$_CMSSET["idcms"]][$_CMSSET["subdom"]][$_CMSSET["access"]]["_cms_logged"];
-
-$dir=opendir(MODULESROL); 
+$cmsNavs = array();
+$dir = opendir(MODULESROL); 
 while ($folder = readdir($dir)){
   if(is_dir(MODULESROL."/".$folder) && $folder != '.' && $folder != '..'){
 	 if(is_file(MODULESROL."/".$folder."/data/settings.cms.php")){
@@ -90,9 +83,4 @@ if($_CMSSET["use-json"]){
 }else{
 	ksort($cmsNavs); // ASC SORT BY KEY
 }
-
-//print_r($navs);
-//echo "<br />";
-//print_r($thmNavs);
-
 ?>
