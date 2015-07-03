@@ -49,7 +49,7 @@ class URLCMS{
 		
 		$getCMS = $_GET;
 			unset($getCMS[$_CMSSET['module-handler']]);
-			unset($getCMS[$_CMSSET['page-handler']]);
+			unset($getCMS[$_CMSSET['page-handler']]);			
 		$this->_getCMS = $getCMS;
 		if(count($getCMS) > 0){
 			foreach($getCMS as $key => $val){
@@ -125,17 +125,21 @@ class URLCMS{
 		}
 	}
 	
-	function addQuery($query){
-		if(is_array($query)){
-			foreach($query as $id => $val){
-				$this->_qry[ $id ] = $val;
+	function addQuery($query,$value = null){
+		if(is_null($value)){
+			if(is_array($query)){
+				foreach($query as $id => $val){
+					$this->_qry[ $id ] = $val;
+				}
+			}else{
+				$qrys = explode("&",$query);
+				foreach($qrys as $qry){
+					$qryVals = explode("=",$qry);
+					$this->_qry[ $qryVals[0] ] = $qryVals[1];
+				}
 			}
 		}else{
-			$qrys = explode("&",$query);
-			foreach($qrys as $qry){
-				$qryVals = explode("=",$qry);
-				$this->_qry[ $qryVals[0] ] = $qryVals[1];
-			}
+			$this->_qry[ $query ] = $value;
 		}
 		$this->_query = true;
 		return true;

@@ -22,10 +22,16 @@ if( !DXS_isAjax() ){ // print_r( $_CMSSET );
 	}else{
 		$_include_file = SKINS."/".$_skin_id."/skin-templates/$skinTemplate";
 	}
+	//echo $CMSURL->Current();exit;
 	if(!is_file($_include_file)){
 		throw new Exception("Skin Template File Not Found");
 	}else{
 		include_once $_include_file;
 	}
+}else{
+	// Cuando no ha sido escapado en el preheader //
+	$CMS_AJAX_RESPONSE['message']	= html_entity_decode( $_CMSLNG["already-logged"] );
+	$CMS_AJAX_RESPONSE['redirect']  = $CMSURL->Current()->removeQuery('ajax').'';
+	echo json_encode($CMS_AJAX_RESPONSE); exit;
 }
 ?>

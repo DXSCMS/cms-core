@@ -3,17 +3,22 @@
 
 if( !$_CMSSession->get('_cms_logged') && DXS_isAjax() ){
 	if( $_CMSSession->get('_cms_ses-exp') ){
-		echo $_CMSLNG['session-expired'];
+		//echo $_CMSLNG['session-expired'];
+		$CMS_AJAX_RESPONSE['error'] = true;
+		$CMS_AJAX_RESPONSE['message'] = $_CMSLNG['session-expired'];
 	}else{
-		echo $_CMSLNG['not-logged'];
-	}
-	exit();
+		//echo $_CMSLNG['not-logged'];
+		$CMS_AJAX_RESPONSE['error'] = true;
+		$CMS_AJAX_RESPONSE['message'] = $_CMSLNG['not-logged'];
+	}	
 }
 
 if( $_CMSSession->get('_cms_ses-exp') ){
 	$_CMSSession->forget('_cms_login-error');
 	$_CMSSession->forget('_cms_login-error-msg');
 	$_CMSSession->set('_cms_ses-exp',false);
+	$CMS_AJAX_RESPONSE['error'] = false;
+	$CMS_AJAX_RESPONSE['message'] = '';
 }
 
 $_CMSSession->set('_cms_login-error',false);
@@ -37,15 +42,28 @@ if( isset($_REQUEST['login']) && !$_CMSSession->get('_cms_logged') ){
 		$_CMSSession->forget('_cms_login-attempts');
 		$_CMSSession->forget('_cms_login-error');
 		$_CMSSession->forget('_cms_login-error-msg');
-		$_CMSSession->forget('_cms_login-error-type');		
+		$_CMSSession->forget('_cms_login-error-type');
+		
 		if($_CMSSession->has('_cms_login-redirect')){
 			$redirect = $_CMSSession->get('_cms_login-redirect',true);			
 		}else{
-			$redirect = $_CMSURL->to().'';
+			$redirect = $_CMSURL->to();
 		}
-		header('Location: '.$redirect);
+		$CMS_AJAX_RESPONSE['error']	= false;
+		$CMS_AJAX_RESPONSE['message']	= html_entity_decode( $_CMSLNG["success-logged"] );
+		$CMS_AJAX_RESPONSE['redirect']	= $redirect;
+		if( !DXS_isAjax() ){
+			header('Location: '.$redirect);
+		}else{
+			$CMS_AJAX_RESPONSE['redirect'] = $_CMSURL->Current()->removeQuery('ajax').'';
+			echo json_encode($CMS_AJAX_RESPONSE);exit;
+		}
 	}else{
-		$_CMSSession->up('_cms_login-attempts');		
+		$_CMSSession->up('_cms_login-attempts');
+		$CMS_AJAX_RESPONSE['error']	= true;
+		$CMS_AJAX_RESPONSE['type']	= $_CMSSession->get('_cms_login-error-type');		
+		$CMS_AJAX_RESPONSE['message']	= html_entity_decode( $_CMSSession->get('_cms_login-error-msg') );
+		$CMS_AJAX_RESPONSE['redirect']	= $_CMSSession->get('_cms_login-redirect');
 	}
 }
 

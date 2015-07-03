@@ -200,5 +200,9 @@ class CMSURL{
 		}
 		return implode("&",$query);
 	}
+	function isAjax(){
+		if( @$_REQUEST['mode'] == 'ajax' || isset($_REQUEST['ajax']) ){return true;}
+		return false;
+	}
 }
 ?>

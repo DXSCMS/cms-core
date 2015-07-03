@@ -20,6 +20,7 @@ include_once CORE."/load.lang-cms.php";
 include_once CORE."/load.module-settings.php";
 //include_once CORE."/load.module.php";
 
+$CMS_AJAX_RESPONSE = array('error'=>false,'message'=>'');
 //print_r($_CMSSET);
 //print_r($MOD_SET);
 if( isset($MOD_SET["mod-req-login"]) ){ 	

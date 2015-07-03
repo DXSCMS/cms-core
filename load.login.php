@@ -1,4 +1,5 @@
 <?php
+if( !DXS_isAjax() ){
 	if( !isset($_CMSSET["skin"]) || !is_dir(SKINS."/".$_CMSSET["skin"]) ){
 		throw new Exception("Skin Folder Not Found");
 	}
@@ -18,4 +19,7 @@
 	}else{
 		throw new Exception("Login Template Not Found");
 	}
+}else{
+	echo json_encode($CMS_AJAX_RESPONSE);exit;
+}	
 ?>

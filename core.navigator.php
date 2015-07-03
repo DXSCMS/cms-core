@@ -4,6 +4,7 @@
 if(isset($_GET['popup'])){$_SET['popup'] = true;}
 
 function fixNavArrJson($arr){//fix stdClass (el json_decode lo lee asi)
+	$ret = array();
 	foreach($arr as $key => $it){$ret[$key] = $it;}
 	return $ret;
 }
@@ -14,6 +15,7 @@ function fixNavOrderJson($mods){global $_CMSSET;
 	if(!is_file($filejmods)) return $mods;
 	$jmods = json_decode(file_get_contents($filejmods),true);	
 	$jmods = fixNavArrJson($jmods);	
+	$fmods = array();
 	foreach($jmods as $jmod => $name){
 		if(isset($mods[$jmod])){$fmods[$jmod]=$mods[$jmod];}
 	}	
