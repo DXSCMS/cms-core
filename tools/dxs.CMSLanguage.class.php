@@ -25,7 +25,7 @@ class CMSLanguage{
 		$this->current = false;		
 	}
 	protected function init(){
-		
+		$this->__construct();
 	}
 	public function addMOD($key,$val,$over = true){
 		if(!isset($this->MOD_LANG[$key])){
@@ -71,15 +71,16 @@ class CMSLanguage{
 	}
 	public function word($key,$keep = false){
 		if(!$this->current){
-			if(isset($this->MOD_LANG[$key])) return $this->MOD_LANG[$key];
-			if(isset($this->CMS_LANG[$key])) return $this->CMS_LANG[$key];
+			if(isset($this->MOD_LANG[$key])) return is_array($this->MOD_LANG[$key])?'[array]':$this->MOD_LANG[$key];
+			if(isset($this->CMS_LANG[$key])) return is_array($this->CMS_LANG[$key])?'[array]':$this->CMS_LANG[$key];
 		}else{
-			if(isset($this->current[$key])){ $word = $this->current[$key]; if(!$keep){$this->current=false;} return $word;}
+			if(isset($this->current[$key])){ $word = $this->current[$key]; if(!$keep){$this->current=false;} return is_array($word)?'[array]':$word;}
 		}
 		if(!$keep){$this->current=false;}
 		return '{'.$key.'}';
 	}
 	public function wordU($key,$keep = false){ return strtoupper($this->word($key,$keep)); }
+	public function wordL($key,$keep = false){ return strtolower($this->word($key,$keep)); }	
 	public function	has($key){
 		if(isset($this->MOD_LANG[$key])) return true;
 		if(isset($this->CMS_LANG[$key])) return true;
