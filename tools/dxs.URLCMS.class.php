@@ -27,7 +27,7 @@ class URLCMS{
 	var $_qry = null;// Array()
 	
 	
-	function URLCMS(){				
+	function __construct(){				
 		$this->init();
 	}
 	
@@ -163,7 +163,7 @@ class URLCMS{
 		}
 		//print_r($_qry);
 
-		if( count($_qry)>0 ) foreach( $_qry as $key => $val ){
+		if( is_array($_qry) && count($_qry)>0 ) foreach( $_qry as $key => $val ){
 			$qryStr[] = $key.'='.$val;
 		}
 		$url .= implode('&',$qryStr);

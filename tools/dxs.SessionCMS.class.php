@@ -7,9 +7,6 @@ included for: init.session.php
 
 class SessionCMS{
 	
-	function SessionCMS(){
-	
-	}
 	function gt($var,$uns = false){
 		global $_CMSSET;
 		@$ret = $_SESSION[$_CMSSET["idcms"]][$_CMSSET["subdom"]][$_CMSSET["access"]][$var];
